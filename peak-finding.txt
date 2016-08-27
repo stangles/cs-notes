@@ -1,0 +1,57 @@
+These notes are primarily related to an MIT lecture recording, found here: https://youtu.be/HtSuA80QTyo
+
+Problem statement: given a 1-d array, find a peak if it exists
+
+A peak p is defined such that a ≤ p ≥ b, where a is the element directly left of p and b is the element directly right of p.
+
+Edge cases: first or last element is a peak
+Base case: a single element array must be a peak
+
+Given the definition of a peak, will there always be a peak in a given array? Yes, even if all elements are the same, a peak exists. If some elements are distinct, a peak must exist because some numbers must be greater than others.
+
+If we alter the definition of a peak p to mean a < p > b where a and b are elements directly left and right of p, respectively, then we are not guaranteed to find a peak. In particular, if we are given an array of elements that are all the same, then no such peak can exist.
+
+Algorithmic approaches for finding a peak:
+
+"Straightforward" algorithm (running time O(n))
+
+Loop over the array from the left, examining each element and its previous/next elements until you find an element p that satisfies the conditions of a peak
+
+We can do better than this, however, by using a modified binary search.
+
+Divide and conquer algorithm for finding a peak (running time O(logn))
+
+1. Begin by choosing the middle element of the array, m = a[n/2]
+2. If a[n/2 - 1] >= m, recursively search the left half of the array for a peak
+   Else if a[n/2 + 1] >= m, recursively search the right half of the array for a peak
+3. If none of the conditions in 2 are satisfied, then we must have arrived at a peak p: a <=  p >= b
+
+2-d peak finding
+
+Problem statement: given a 2-d array, find a peak if it exists.
+
+A peak p is defined such that p >= a, p >= b, p >= c, p >= d, where elements a, b, c and d are the elements to the left, above, to the right and below a, respectively. Stated another way, p is a "hill" in a 2-d array.
+
+Base case: a single column array
+
+Greedy ascent algorithm (running time O(n * m), where n is the number of rows and m is the number of columns in array a)
+
+1. Begin by choosing the middle row and column in the array, j = a[n/2][m/2] (note: you can begin anywhere)
+2. While at least one adjacent element is greater than your current element
+        Move to the greatest adjacent element
+3. When the condition in 2 is no longer satisfied, you must be at a peak
+
+Can we do better than O(n * m)? Yes.
+
+Recursively:
+1. Pick middle column j = m/2
+2. Find global max on column j at (i, j)
+3. Compare (i, j - 1), (i, j), (i, j + 1)
+4. Pick left cols if (i, j - 1) > (i, j), pick right if (i, j + 1) > (i, j)
+5. If (i, j) >= (i, j - 1) and (i, j + 1), then we're at a 2-d peak
+
+Runtime of above algorithm: (O(nlogm))
+
+Intuitive explanation of running time: it takes O(n) work to find the global max in a column. Why? We cannot guarantee that we find a global maximum using binary search, as it will in some cases return the local max for a column. So, we must scan linearly through the entire column and keep track of the max value found thus far. We repeat the scan logm times, since we eliminate half the columns we need to search with every step. Thus, our runtime for 2-d peak finding is O(nlogm).
+
+
